@@ -9,13 +9,15 @@ interface TableProps {
 
 export default function Table(_props: TableProps) {
 
+    const displayActions = _props.clientDeleted || _props.clientSelected
+
     function renderHeader() {
         return (
             <tr>
                 <th className="text-left p-4">Código</th>
                 <th className="text-left p-4">Nome</th>
                 <th className="text-left p-4">Idade</th>
-                <th className="p-4">Ações</th>
+                {displayActions ? <th className="p-4">Ações</th> : false}
             </tr>
         )
     }
@@ -28,7 +30,7 @@ export default function Table(_props: TableProps) {
                     <td className="text-left p-4">{client.id}</td>
                     <td className="text-left p-4">{client.name}</td>
                     <td className="text-left p-4">{client.age}</td>
-                    {renderActions(client)}
+                    {displayActions ? renderActions(client) : false}
                 </tr>
             )
         })
@@ -36,21 +38,25 @@ export default function Table(_props: TableProps) {
 
     function renderActions(_client: Client) {
         return (
-            <td className="flex">
-                <button className={`
+            <td className="flex justify-center">
+                {_props.clientSelected ? (
+                    <button onClick={() => _props.clientSelected?.(_client)} className={`
                     flex justify-center items-center
                     text-green-600 rounded-full p-2 m-1
                     hover:bg-purple-50
                 `}>
-                    {IconEdit}
-                </button>
-                <button className={`
+                        {IconEdit}
+                    </button>
+                ) : false}
+                {_props.clientDeleted ? (
+                    <button onClick={() => _props.clientDeleted?.(_client)} className={`
                     flex justify-center items-center
                     text-red-500 rounded-full p-2 m-1
                     hover:bg-purple-50
                 `}>
-                    {IconDelete}
-                </button>
+                        {IconDelete}
+                    </button>
+                ) : false}
             </td>
         )
     }
